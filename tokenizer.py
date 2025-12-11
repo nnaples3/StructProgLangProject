@@ -1,6 +1,5 @@
 import re
 
-# Define patterns for tokens
 patterns = [
     [r"print","print"],
     [r"if","if"],
@@ -15,8 +14,8 @@ patterns = [
     [r"or","||"],
     [r"not","!"],
     [r"\d*\.\d+|\d+\.\d*|\d+", "number"],
-    [r'"([^"]|"")*"', "string"],  # string literals
-    [r"[a-zA-Z_][a-zA-Z0-9_]*", "identifier"],  # identifiers
+    [r'"([^"]|"")*"', "string"],
+    [r"[a-zA-Z_][a-zA-Z0-9_]*", "identifier"],
     [r"\+", "+"],
     [r"\-", "-"],
     [r"\*", "*"],
@@ -56,7 +55,6 @@ def tokenize(characters):
             if match:
                 break
         assert match
-        # (process errors)
         if tag == "error":
             raise Exception("Syntax error")
         token = {
@@ -74,7 +72,6 @@ def tokenize(characters):
         if token["tag"] != "whitespace":
             tokens.append(token)
         position = match.end()
-    # append end-of-stream marker
     tokens.append({
         "tag":None,
         "value":None,

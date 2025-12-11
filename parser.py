@@ -6,7 +6,6 @@ current_parser.py
 Parser for simple expressions and statements.
 """
 
-# Grammar 
 
 grammar = """
     factor = <number> | <string> | <identifier> | "(" expression ")" | "!" expression | "-" expression
@@ -25,8 +24,6 @@ grammar = """
     statement = statement_block | if_statement | while_statement | print_statement | assignment_statement
     program = [ statement { ";" statement } ]
 """
-
-# --- Parsing Functions and Their Tests ---
 
 def parse_factor(tokens):
     """
@@ -417,7 +414,6 @@ def test_parse_print_statement():
 def parse_if_statement(tokens):
     branches = []
 
-    # parse the initial if
     if tokens[0]["tag"] != "if":
         raise Exception(f"Expected 'if', got {tokens[0]}")
     tokens = tokens[1:]
@@ -425,14 +421,12 @@ def parse_if_statement(tokens):
     then_block, tokens = parse_statement_block(tokens)
     branches.append({"condition": condition, "then": then_block})
 
-    # parse 0 or more elif
     while tokens and tokens[0]["tag"] == "elif":
         tokens = tokens[1:]
         condition, tokens = parse_expression(tokens)
         then_block, tokens = parse_statement_block(tokens)
         branches.append({"condition": condition, "then": then_block})
 
-    # optional else
     else_block = None
     if tokens and tokens[0]["tag"] == "else":
         tokens = tokens[1:]
@@ -590,13 +584,9 @@ def parse(tokens):
     ast, tokens = parse_program(tokens)
     return ast
 
-# --- Grammar Verification Mechanism ---
-
-# Normalize the grammar by stripping whitespace from each nonempty line.
 normalized_grammar = "\n".join([line.strip() for line in grammar.splitlines() if line.strip()])
 
 if __name__ == "__main__":
-    # List of all test functions.
     test_functions = [
         test_parse_factor,
         test_parse_term,
@@ -617,17 +607,12 @@ if __name__ == "__main__":
 
     untested_grammar = normalized_grammar
 
-    # For each test function, verify that:
-    # 1. Its docstring rule appears in the normalized grammar.
-    # 2. The corresponding parsing function shares the same docstring rule.
     for test_function in test_functions:
         test_rule = test_function.__doc__.strip().splitlines()[0].strip()
-        # print("Testing rule from test:", test_rule)
         if test_rule not in untested_grammar:
             raise Exception(f"Rule [{test_rule}] not found in grammar.")
         untested_grammar = untested_grammar.replace(test_rule, "").strip()
 
-        # Determine the corresponding parsing function name (drop the "test_" prefix).
         parsing_function_name = test_function.__name__[5:]
         if parsing_function_name not in globals():
             raise Exception(f"Parsing function {parsing_function_name} not found for test {test_function.__name__}")
@@ -640,7 +625,6 @@ if __name__ == "__main__":
                 f"Mismatch in docstring rules for {parsing_function_name}: "
                 f"test rule is [{test_rule}] but function rule is [{function_rule}]."
             )
-        # Run the test function.
         test_function()
 
     if untested_grammar.strip():

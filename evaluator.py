@@ -21,11 +21,10 @@ def evaluate(ast, environment={}):
         printed_string = s
         return None
     if ast["tag"] == "if":
-    # loop over if + elif branches
         for branch in ast["branches"]:
             if evaluate(branch["condition"], environment):
                 evaluate(branch["then"], environment)
-                return None  # only the first true branch executes
+                return None 
         if ast.get("else"):
             evaluate(ast["else"], environment)
         return None
@@ -170,11 +169,6 @@ def test_evaluate_expression():
     assert eval("1==2") == False
     assert eval("2!=1") == True
     assert eval("1!=1") == False
-    # tokens = tokenize("-1")
-    # ast = parse(tokens)
-    # result = evaluate(ast, {})
-    # print(ast, result)
-    # exit(0)
 
     assert eval("-1") == -1
     assert eval("-(1)") == -1
